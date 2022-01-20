@@ -11,11 +11,11 @@ public class MySQLConnection
 {
 	public static void main(String[] args)
 	{
-		//		JDBCexample("test", "root", "");
-		example2("test", "root", "");
+		example("test", "root", "");
+		//		example2("test", "root", "");
 	}
 
-	public static void JDBCexample(String dbName, String userid, String passwd)
+	public static void example(String dbName, String userid, String passwd)
 	{
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://localhost:3306/" + dbName, userid, passwd);
@@ -35,7 +35,8 @@ public class MySQLConnection
 			//			
 			// ================= executing a query ================= 
 			ResultSet rs = statement
-					.executeQuery("select name\n" +
+					.executeQuery("" +
+							"select name\n" +
 							"from instructor\n" +
 							"where salary > some (select salary\n" +
 							"                     from instructor\n" +
