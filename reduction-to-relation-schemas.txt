@@ -1,0 +1,48 @@
+# ==================
+# strong entity sets
+
+person(national_code, first_name, last_name, birth_date, gender, special_disease)
+doctor(national_code, first_name, last_name, birth_date, gender, special_disease, medical_system_number)
+nurse(national_code, first_name, last_name, birth_date, gender, special_disease, degree_level, nursing_code)
+
+system_information(user_name, password, creation_date)
+
+vaccination_center(name, address)
+brand(name, doses, doses_interval_days, doctor_medical_system_number)
+vial(serial_number, production_location, production_date)
+
+# ================
+# weak entity sets
+
+injection(national_code, date)
+account(user_name)
+
+# ======================================
+# relation ship sets
+# uppercase attributes show primary keys
+
+# relating to person
+person_account(NATIONAL_CODE)
+person_vaccination_center(NATIONAL_CODE, name)
+injection_person(NATIONAL_CODE, DATE)
+
+# relating to doctor
+deletes(NATIONAL_CODE, user_name)
+doctor_vaccination_center(NAME, national_code)
+doctor_brand(NAME, national_code)
+
+# relating to account
+account_system_information(USER_NAME)
+
+# relating to nurse
+nurse_vial(SERIAL_NUMBER, national_code)
+nurse_injection(DATE, INJECTION_NATIONAL_CODE, national_code)
+
+# relating to vaccination center
+vaccination_center_vial(SERIAL_NUMBER, name)
+vaccination_center_injection(DATE, NATIONAL_CODE, name, point)
+
+# relating to vial
+vial_brand(SERIAL_NUMBER, name)
+injection_vial(NATIONAL_CODE, DATE, serial_number)
+
