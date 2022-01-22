@@ -112,6 +112,7 @@ person(NATIONAL_CODE, first_name, last_name, birth_date, gender, special_disease
 doctor(NATIONAL_CODE, first_name, last_name, birth_date, gender, special_disease, medical_system_number)
 nurse(NATIONAL_CODE, first_name, last_name, birth_date, gender, special_disease, degree_level, nursing_code)
 
+system_information(USER_NAME, password, creation_date)
 account(USER_NAME, NATIONAL_CODE)
 deletes(USER_NAME, DOCTOR_NATIONAL_CODE)
 

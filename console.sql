@@ -1,98 +1,123 @@
 # ali moradzade 9831058
 
-# ==============================
+# =================
 # making our tables
 
-create table person
+CREATE TABLE person
 (
-    national_code   varchar(20),
-    first_name      varchar(20),
-    last_name       varchar(20),
-    birth_date      date,
-    gender          char(1),
-    special_disease char(2),
-    primary key (national_code)
+    national_code   CHAR(10) UNIQUE,
+    first_name      VARCHAR(20) NOT NULL,
+    last_name       VARCHAR(20) NOT NULL,
+    birth_date      DATE,
+    gender          CHAR(1)     NOT NULL,
+    special_disease CHAR(255),
+    PRIMARY KEY (national_code),
+    CHECK (national_code RLIKE '[0-9]{10}'),
+    CHECK (gender RLIKE 'F|M')
 );
 
-create table nurse
+CREATE TABLE doctor
 (
-    national_code   varchar(20),
-    first_name      varchar(20),
-    last_name       varchar(20),
-    birth_date      date,
-    gender          char(1),
-    special_disease varchar(250),
-    degree_level    int,
-    nursing_code    char(2),
-    primary key (national_code)
+    national_code         CHAR(10) UNIQUE,
+    first_name            VARCHAR(20) NOT NULL,
+    last_name             VARCHAR(20) NOT NULL,
+    birth_date            DATE,
+    gender                CHAR(1)     NOT NULL,
+    special_disease       CHAR(255),
+    medical_system_number CHAR(5)     NOT NULL UNIQUE,
+    PRIMARY KEY (national_code),
+    CHECK (national_code RLIKE '[0-9]{10}'),
+    CHECK (gender RLIKE 'F|M'),
+    CHECK (medical_system_number RLIKE '[0-9]{5}')
 );
 
-create table doctor
+CREATE TABLE nurse
 (
-    national_code         varchar(20),
-    first_name            varchar(20),
-    last_name             varchar(20),
-    birth_date            date,
-    gender                char(1),
-    special_disease       char(2),
-    medical_system_number int,
-    primary key (national_code)
+    national_code   CHAR(10) UNIQUE,
+    first_name      VARCHAR(20) NOT NULL,
+    last_name       VARCHAR(20) NOT NULL,
+    birth_date      DATE,
+    gender          CHAR(1)     NOT NULL,
+    special_disease VARCHAR(255),
+    degree_level    CHAR(8) UNIQUE,
+    nursing_code    VARCHAR(20) NOT NULL,
+    PRIMARY KEY (national_code),
+    CHECK (national_code RLIKE '[0-9]{10}'),
+    CHECK (gender RLIKE 'F|M'),
+    CHECK (degree_level RLIKE '[0-9]{8}'),
+    CHECK (nursing_code IN ('matron', 'supervisor', 'nurse', 'practical'))
 );
 
-create table vaccination_center
+CREATE TABLE system_information
 (
-    name    varchar(20),
-    address varchar(50),
-    primary key (name, address)
+    user_name     VARCHAR(20),
+    password      VARCHAR(255),
+    creation_date DATETIME,
+    PRIMARY KEY (user_name),
+    CHECK (password RLIKE '.*[0-9].*' AND password RLIKE '.*[a-z].*' AND LENGTH(password) >= 8)
 );
 
-create table health_center
+CREATE TABLE account
 (
-    health_center_code int,
-    name               varchar(20),
-    address            varchar(50),
-    primary key (health_center_code)
+    national_code CHAR(10),
+    user_name     VARCHAR(20),
+    PRIMARY KEY (national_code, user_name),
+    FOREIGN KEY (national_code) REFERENCES person (national_code),
+    FOREIGN KEY (user_name) REFERENCES system_information (user_name)
 );
 
-create table injection
+CREATE TABLE deletes
 (
-    injection_id  char(10),
-    national_code varchar(20),
-    name          varchar(20),
-    address       varchar(50),
-    time          time,
-    point         int,
-    primary key (injection_id, national_code, name, address),
-    foreign key (national_code) references person (national_code),
-    foreign key (name, address) references vaccination_center (name, address),
-    check ( point between 1 and 5)
+    user_name            VARCHAR(20),
+    doctor_national_code CHAR(10),
+    PRIMARY KEY (user_name, doctor_national_code),
+    FOREIGN KEY (user_name) REFERENCES account (user_name),
+    FOREIGN KEY (doctor_national_code) REFERENCES doctor (national_code)
 );
 
-create table company
+CREATE TABLE vaccination_center
 (
-    name        varchar(20),
-    nationality varchar(20),
-    kind        varchar(10),
-    primary key (name)
+    name           VARCHAR(20),
+    creator_doctor VARCHAR(20),
+    address        VARCHAR(50) NOT NULL,
+    PRIMARY KEY (name),
+    FOREIGN KEY (creator_doctor) REFERENCES doctor (national_code)
 );
 
-create table brand
+CREATE TABLE brand
 (
-    name         varchar(20),
-    company_name varchar(20),
-    primary key (name, company_name),
-    foreign key (company_name) references company (name)
+    name                         VARCHAR(20),
+    creator_doctor_national_code CHAR(10),
+    doses                        INT,
+    doses_interval_days          TIME,
+    PRIMARY KEY (name),
+    FOREIGN KEY (creator_doctor_national_code) REFERENCES doctor (national_code)
 );
 
-create table vial
+CREATE TABLE vial
 (
-    serial_number       char(20),
-    brand_name          varchar(20),
-    health_center_code  int,
-    production_location varchar(20),
-    production_date     date,
-    primary key (brand_name, serial_number, health_center_code),
-    foreign key (brand_name) references brand (name),
-    foreign key (health_center_code) references health_center (health_center_code)
+    creator_nurse_national_code CHAR(10),
+    serial_number               VARCHAR(20),
+    vaccination_center_name     VARCHAR(20),
+    brand_name                  VARCHAR(20),
+    production_location         VARCHAR(20) NOT NULL,
+    production_date             DATE,
+    PRIMARY KEY (serial_number),
+    FOREIGN KEY (creator_nurse_national_code) REFERENCES nurse (national_code),
+    FOREIGN KEY (vaccination_center_name) REFERENCES vaccination_center (name),
+    FOREIGN KEY (brand_name) REFERENCES brand (name)
 );
 
+CREATE TABLE injection
+(
+    nurse_national_code     CHAR(10),
+    national_code           CHAR(10),
+    date                    DATE,
+    vaccination_center_name VARCHAR(20),
+    serial_number           VARCHAR(20),
+    PRIMARY KEY (nurse_national_code, national_code, date, vaccination_center_name, serial_number),
+    FOREIGN KEY (nurse_national_code) REFERENCES nurse (national_code),
+    FOREIGN KEY (national_code) REFERENCES person (national_code),
+    FOREIGN KEY (vaccination_center_name) REFERENCES vaccination_center (name),
+    FOREIGN KEY (serial_number) REFERENCES vial (serial_number)
+);
