@@ -1,7 +1,7 @@
 # ali moradzade 9831058
 
-# =================
-# making our tables
+# ====================
+# 1. making our tables
 
 CREATE TABLE person
 (
@@ -13,7 +13,7 @@ CREATE TABLE person
     special_disease CHAR(255),
     PRIMARY KEY (national_code),
     CHECK (national_code RLIKE '[0-9]{10}'),
-    CHECK (gender RLIKE 'F|M')
+    CHECK (gender RLIKE '[FM]')
 );
 
 CREATE TABLE doctor
@@ -27,7 +27,7 @@ CREATE TABLE doctor
     medical_system_number CHAR(5)     NOT NULL UNIQUE,
     PRIMARY KEY (national_code),
     CHECK (national_code RLIKE '[0-9]{10}'),
-    CHECK (gender RLIKE 'F|M'),
+    CHECK (gender RLIKE '[FM]'),
     CHECK (medical_system_number RLIKE '[0-9]{5}')
 );
 
@@ -43,7 +43,7 @@ CREATE TABLE nurse
     nursing_code    VARCHAR(20) NOT NULL,
     PRIMARY KEY (national_code),
     CHECK (national_code RLIKE '[0-9]{10}'),
-    CHECK (gender RLIKE 'F|M'),
+    CHECK (gender RLIKE '[FM]'),
     CHECK (degree_level RLIKE '[0-9]{8}'),
     CHECK (nursing_code IN ('matron', 'supervisor', 'nurse', 'practical'))
 );
@@ -122,9 +122,11 @@ CREATE TABLE injection
     FOREIGN KEY (serial_number) REFERENCES vial (serial_number)
 );
 
-# =======================
-# creating our procedures
+# ==========================
+# 2. creating our procedures
 
+# ========================
+# 2.1 all users operations
 DELIMITER $$
 
 CREATE PROCEDURE sign_up(
@@ -162,8 +164,8 @@ BEGIN
                 LENGTH(password_param) >= 8
         ) THEN
         SET result = CONCAT(result,
-                            'Entered password must be at least 8 characters and and\n ' ||
-                            'have at least one character and digit.');
+                            'Entered password must be at least 8 characters and and\n '
+                                'have at least one character and digit.');
     END IF;
 
     IF STRCMP(result, '') <> 0 THEN
@@ -184,8 +186,8 @@ DELIMITER ;
 DELIMITER $$
 
 CREATE PROCEDURE sign_in(
-    IN user_name_param VARCHAR(20),
-    IN password_param VARCHAR(255)
+    user_name_param VARCHAR(20),
+    password_param VARCHAR(255)
 )
 BEGIN
     IF user_name_param NOT IN (
@@ -204,6 +206,160 @@ BEGIN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Your password is not correct. Please try again.', MYSQL_ERRNO = 9001;
     END IF;
+END $$
+
+DELIMITER ;
+
+# ======================
+# 2.2 doctors operations
+DELIMITER $$
+
+CREATE PROCEDURE change_password(
+    user_name_param VARCHAR(20),
+    new_password_param VARCHAR(255)
+)
+BEGIN
+    IF NOT (
+                new_password_param RLIKE '.*[0-9].*' AND
+                new_password_param RLIKE '.*[a-z].*' AND
+                LENGTH(new_password_param) >= 8
+        ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT =
+                    'Entered password must contain at least a number,\n'
+                        'a letter, and have at least 8 characters length.', MYSQL_ERRNO = 9002;
+    END IF;
+
+    UPDATE system_information
+    SET system_information.password = new_password_param
+    WHERE system_information.user_name = user_name_param;
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE create_brand(
+    name_param VARCHAR(20),
+    creator_doctor_national_code_param CHAR(10),
+    doses_param INT,
+    doses_interval_days_param TIME
+)
+BEGIN
+    IF creator_doctor_national_code_param NOT IN (
+        SELECT user_name
+        FROM system_information
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'user does not exist!', MYSQL_ERRNO = 9002;
+    END IF;
+
+    IF creator_doctor_national_code_param NOT IN (
+        SELECT national_code
+        FROM doctor
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'user must be doctor to create brand.', MYSQL_ERRNO = 9002;
+    END IF;
+
+    IF name_param IN (
+        SELECT name
+        FROM brand
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'brand exists!', MYSQL_ERRNO = 9002;
+    END IF;
+
+    INSERT INTO brand(name, creator_doctor_national_code, doses, doses_interval_days)
+    VALUES (name_param,
+            creator_doctor_national_code_param,
+            doses_param,
+            doses_interval_days_param);
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE create_vaccination_center(
+    name_param VARCHAR(20),
+    creator_doctor_param VARCHAR(20),
+    address_param VARCHAR(50)
+)
+BEGIN
+    IF creator_doctor_param NOT IN (
+        SELECT user_name
+        FROM system_information
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'user does not exist!', MYSQL_ERRNO = 9002;
+    END IF;
+
+    IF creator_doctor_param NOT IN (
+        SELECT national_code
+        FROM doctor
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'user must be doctor to create brand.', MYSQL_ERRNO = 9002;
+    END IF;
+
+    IF name_param IN (
+        SELECT name
+        FROM vaccination_center
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'vaccination center exists!', MYSQL_ERRNO = 9002;
+    END IF;
+
+    INSERT INTO vaccination_center(name, creator_doctor, address)
+    VALUES (name_param, creator_doctor, address_param);
+END $$
+
+DELIMITER ;
+
+# =====================
+# 2.3 nurses operations
+DELIMITER $$
+
+CREATE PROCEDURE create_vial(
+    creator_nurse_national_code_param CHAR(10),
+    serial_number_param VARCHAR(20),
+    vaccination_center_name_param VARCHAR(20),
+    brand_name_param VARCHAR(20),
+    production_location_param VARCHAR(20),
+    production_date_param DATE
+)
+BEGIN
+    IF creator_nurse_national_code_param NOT IN (
+        SELECT user_name
+        FROM system_information
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'user does not exist!', MYSQL_ERRNO = 9002;
+    END IF;
+
+    IF creator_nurse_national_code_param NOT IN (
+        SELECT national_code
+        FROM nurse
+        WHERE nursing_code = 'matron'
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'user must be nurse and his/her nursing code must be matron to create vial.',
+                MYSQL_ERRNO = 9002;
+    END IF;
+
+    IF serial_number_param IN (
+        SELECT serial_number
+        FROM vial
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'vial exists!', MYSQL_ERRNO = 9002;
+    END IF;
+
+    INSERT INTO vial(creator_nurse_national_code, serial_number, vaccination_center_name, brand_name,
+                     production_location, production_date)
+    VALUES (creator_nurse_national_code_param, serial_number_param, vaccination_center_name_param,
+            brand_name_param, production_location_param, production_date_param);
 END $$
 
 DELIMITER ;
