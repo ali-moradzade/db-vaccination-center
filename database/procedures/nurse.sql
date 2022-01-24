@@ -21,7 +21,7 @@ BEGIN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Your password is not correct. Please try again.', MYSQL_ERRNO = 9001;
     END IF;
-    IF user_name_param not IN (
+    IF user_name_param NOT IN (
         SELECT national_code
         FROM nurse
     ) THEN
@@ -88,9 +88,11 @@ CREATE PROCEDURE injects(
     point_param INT
 )
 BEGIN
+    START TRANSACTION;
     INSERT INTO injection(nurse_national_code, national_code, date, vaccination_center_name, serial_number, point)
     VALUES (nurse_national_code_param, national_code_param, date_param, vaccination_center_name_param,
             serial_number_param, point_param);
+    COMMIT;
 END $$
 
 DELIMITER ;

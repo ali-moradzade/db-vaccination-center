@@ -45,8 +45,6 @@ BEGIN
         INSERT INTO system_information(user_name, password, creation_date)
         VALUES (national_code_param, password_param, NOW());
 
-        INSERT INTO account(national_code, user_name) VALUES (national_code, national_code);
-
         SET result = 'Signed up successfully!';
         COMMIT;
     END IF;
@@ -103,5 +101,81 @@ BEGIN
     SET system_information.password = new_password_param
     WHERE system_information.user_name = user_name_param;
 END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE give_point(
+    national_code_param CHAR(10),
+    vaccination_center_name_param VARCHAR(20),
+    brand_name_param VARCHAR(20),
+    point_param INT,
+    dose_number_param INT
+)
+BEGIN
+    IF (national_code_param, vaccination_center_name_param, brand_name_param, point_param, dose_number_param) IN (
+        SELECT *
+        FROM points
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'you had given point for that dose and vaccination center.', MYSQL_ERRNO = 9002;
+    END IF;
+
+    INSERT INTO points(national_code, vaccination_center_name, brand_name, point, dose_number)
+    VALUES (national_code_param, vaccination_center_name_param, brand_name_param, point_param, dose_number_param);
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE show_vaccination_centers_points(
+    name_param VARCHAR(20)
+)
+BEGIN
+    SELECT vaccination_center_name, point
+    FROM points
+    WHERE vaccination_center_name = name_param
+    GROUP BY vaccination_center_name;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE show_each_day_injections(
+    date DATE
+)
+BEGIN
+    SELECT date, COUNT(national_code)
+    FROM injection
+    GROUP BY date DESC;
+END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE show_each_brand_vaccinated_people(
+    name_param VARCHAR(20)
+)
+BEGIN
+    #     DECLARE number_of_doses INT;
+#
+#     SELECT doses
+#     INTO number_of_doses
+#     FROM brand
+#     WHERE brand.name = name_param;
+
+    SELECT COUNT(national_code)
+    FROM injection
+    WHERE serial_number IN (
+        SELECT serial_number
+        FROM vial
+                 NATURAL JOIN brand
+        WHERE brand.name = name_param
+    );
+END $$
 
 DELIMITER ;
