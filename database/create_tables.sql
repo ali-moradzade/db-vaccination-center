@@ -54,25 +54,8 @@ CREATE TABLE system_information
     password      VARCHAR(255),
     creation_date DATETIME,
     PRIMARY KEY (user_name),
+    FOREIGN KEY (user_name) REFERENCES person (national_code),
     CHECK (password RLIKE '.*[0-9].*' AND password RLIKE '.*[a-z].*' AND LENGTH(password) >= 8)
-);
-
-CREATE TABLE account
-(
-    national_code CHAR(10),
-    user_name     VARCHAR(20),
-    PRIMARY KEY (national_code, user_name),
-    FOREIGN KEY (national_code) REFERENCES person (national_code),
-    FOREIGN KEY (user_name) REFERENCES system_information (user_name)
-);
-
-CREATE TABLE deletes
-(
-    user_name            VARCHAR(20),
-    doctor_national_code CHAR(10),
-    PRIMARY KEY (user_name, doctor_national_code),
-    FOREIGN KEY (user_name) REFERENCES account (user_name),
-    FOREIGN KEY (doctor_national_code) REFERENCES doctor (national_code)
 );
 
 CREATE TABLE vaccination_center
@@ -92,6 +75,18 @@ CREATE TABLE brand
     doses_interval_days          TIME,
     PRIMARY KEY (name),
     FOREIGN KEY (creator_doctor_national_code) REFERENCES doctor (national_code)
+);
+
+CREATE TABLE points
+(
+    national_code           CHAR(10),
+    vaccination_center_name VARCHAR(20),
+    brand_name              VARCHAR(20),
+    point                   INT,
+    dose_number             INT,
+    FOREIGN KEY (national_code) REFERENCES person (national_code),
+    FOREIGN KEY (vaccination_center_name) REFERENCES vaccination_center (name),
+    FOREIGN KEY (brand_name) REFERENCES brand (name)
 );
 
 CREATE TABLE vial
@@ -115,9 +110,11 @@ CREATE TABLE injection
     date                    DATE,
     vaccination_center_name VARCHAR(20),
     serial_number           VARCHAR(20),
+    point                   INT,
     PRIMARY KEY (nurse_national_code, national_code, date, vaccination_center_name, serial_number),
     FOREIGN KEY (nurse_national_code) REFERENCES nurse (national_code),
     FOREIGN KEY (national_code) REFERENCES person (national_code),
     FOREIGN KEY (vaccination_center_name) REFERENCES vaccination_center (name),
-    FOREIGN KEY (serial_number) REFERENCES vial (serial_number)
+    FOREIGN KEY (serial_number) REFERENCES vial (serial_number),
+    CHECK ( point BETWEEN 1 AND 5)
 );
