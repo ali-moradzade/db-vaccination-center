@@ -5,7 +5,7 @@
 # sign_up
 
 SELECT *
-from system_information;
+FROM system_information;
 
 CALL sign_up('0009831004', 'ali', 'asad',
              '2000-01-01', 'M', 'N',
@@ -77,3 +77,30 @@ CALL change_password('0009831113', '12345678a', 'abcdefg1');
 
 SELECT user_name, password
 FROM system_information;
+
+# ===============================
+# show_vaccination_centers_points
+
+# CREATE PROCEDURE show_vaccination_centers_points(
+#     name_param VARCHAR(20)
+# );
+
+SELECT *
+FROM vaccination_center;
+
+CALL show_vaccination_center_points('abbasi-vacc-center');
+CALL show_vaccination_center_points('asad-vacc-center');
+CALL show_vaccination_center_points('babaei-vacc-center');
+CALL show_vaccination_center_points('morad-vacc-center');
+
+# ========================
+# show_each_day_injections
+
+# CREATE PROCEDURE show_each_day_injections(
+#     date DATE
+# );
+
+SELECT *
+from injection;
+
+CALL show_each_day_injections('1400-10-10');

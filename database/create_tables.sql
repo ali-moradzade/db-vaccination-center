@@ -88,6 +88,7 @@ CREATE TABLE injection
     serial_number           VARCHAR(20),
     point                   INT,
     date                    DATE,
+    PRIMARY KEY (national_code, date),
     FOREIGN KEY (nurse_national_code) REFERENCES nurse (national_code),
     FOREIGN KEY (national_code) REFERENCES person (national_code),
     FOREIGN KEY (vaccination_center_name) REFERENCES vaccination_center (name),

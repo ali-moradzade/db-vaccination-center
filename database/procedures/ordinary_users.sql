@@ -115,10 +115,18 @@ DELIMITER ;
 
 DELIMITER $$
 
-CREATE PROCEDURE show_vaccination_centers_points(
+CREATE PROCEDURE show_vaccination_center_points(
     name_param VARCHAR(20)
 )
 BEGIN
+    IF name_param NOT IN (
+        SELECT name
+        FROM vaccination_center
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'no such vaccination system!', MYSQL_ERRNO = 9002;
+    END IF;
+
     SELECT vaccination_center_name, SUM(point)
     FROM injection
     WHERE vaccination_center_name = name_param;
@@ -145,12 +153,13 @@ CREATE PROCEDURE show_each_brand_vaccinated_people(
     name_param VARCHAR(20)
 )
 BEGIN
-    #     DECLARE number_of_doses INT;
-#
-#     SELECT doses
-#     INTO number_of_doses
-#     FROM brand
-#     WHERE brand.name = name_param;
+    IF name_param NOT IN (
+        SELECT name
+        FROM brand
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'no such brand!', MYSQL_ERRNO = 9002;
+    END IF;
 
     SELECT COUNT(national_code)
     FROM injection
