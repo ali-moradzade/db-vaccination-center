@@ -28,7 +28,7 @@ INSERT INTO person(national_code, first_name, last_name, birth_date, gender, spe
 VALUES ('0009831058', 'ali', 'moradzade', '2000-1-1', 'M', 'N');
 
 INSERT INTO person(national_code, first_name, last_name, birth_date, gender, special_disease)
-VALUES ('0009831059', 'abolfazal', 'moradi-fejooni', '2000-1-1', 'M', 'N');
+VALUES ('0009831059', 'abolfazl', 'moradi-fejooni', '2000-1-1', 'M', 'N');
 
 INSERT INTO person(national_code, first_name, last_name, birth_date, gender, special_disease)
 VALUES ('0009831113', 'amir', 'khosravi-nezhad', '2000-1-1', 'M', 'N');

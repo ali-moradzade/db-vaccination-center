@@ -50,7 +50,7 @@ CREATE TABLE system_information
 CREATE TABLE vaccination_center
 (
     name           VARCHAR(20),
-    creator_doctor VARCHAR(20),
+    creator_doctor VARCHAR(20) NOT NULL,
     address        VARCHAR(50) NOT NULL,
     PRIMARY KEY (name),
     FOREIGN KEY (creator_doctor) REFERENCES doctor (national_code)
@@ -61,7 +61,7 @@ CREATE TABLE brand
     name                         VARCHAR(20),
     creator_doctor_national_code CHAR(10),
     doses                        INT,
-    doses_interval_days          TIME,
+    doses_interval_days          INT,
     PRIMARY KEY (name),
     FOREIGN KEY (creator_doctor_national_code) REFERENCES doctor (national_code)
 );

@@ -38,7 +38,7 @@ CREATE PROCEDURE create_brand(
     name_param VARCHAR(20),
     creator_doctor_national_code_param CHAR(10),
     doses_param INT,
-    doses_interval_days_param TIME
+    doses_interval_days_param INT
 )
 BEGIN
     IF creator_doctor_national_code_param NOT IN (
@@ -107,7 +107,41 @@ BEGIN
     END IF;
 
     INSERT INTO vaccination_center(name, creator_doctor, address)
-    VALUES (name_param, creator_doctor, address_param);
+    VALUES (name_param, creator_doctor_param, address_param);
 END $$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE delete_account(
+    doctor_national_code_param CHAR(10),
+    user_name_param CHAR(10)
+)
+BEGIN
+    IF doctor_national_code_param NOT IN (
+        SELECT national_code
+        FROM doctor
+        WHERE national_code IN (
+            SELECT user_name
+            FROM system_information
+        )
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'just doctors can delete accounts!', MYSQL_ERRNO = 9002;
+    END IF;
+
+    IF user_name_param NOT IN (
+        SELECT user_name
+        FROM system_information
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'user not found!', MYSQL_ERRNO = 9002;
+    END IF;
+
+    DELETE
+    FROM system_information
+    WHERE user_name = user_name_param;
+END;
 
 DELIMITER ;
