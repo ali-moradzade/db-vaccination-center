@@ -89,6 +89,12 @@ CREATE PROCEDURE injects(
 )
 BEGIN
     START TRANSACTION;
+    IF NOT point_param BETWEEN 1 AND 5 THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'point must be between a and 5', MYSQL_ERRNO = 9002;
+
+    END IF;
+
     INSERT INTO injection(nurse_national_code, national_code, date, vaccination_center_name, serial_number, point)
     VALUES (nurse_national_code_param, national_code_param, date_param, vaccination_center_name_param,
             serial_number_param, point_param);

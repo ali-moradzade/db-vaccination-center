@@ -2,23 +2,22 @@ DELIMITER $$
 
 CREATE PROCEDURE sign_up(
     IN national_code_param CHAR(10),
-    IN password_param VARCHAR(255),
     IN first_name_param VARCHAR(20),
     IN last_name_param VARCHAR(20),
     IN birth_date_param DATE,
     IN gender_param CHAR(1),
     IN special_disease_param CHAR(255),
-    OUT result VARCHAR(255)
+    IN password_param VARCHAR(255)
 )
 BEGIN
     START TRANSACTION;
-    SET result = '';
 
     IF national_code_param IN (
         SELECT user_name
         FROM system_information
     ) THEN
-        SET result = 'This username is already taken.\n';
+        SIGNAL SQLSTATE '02000'
+            SET MESSAGE_TEXT = 'You have an account! log into your account.', MYSQL_ERRNO = 9000;
     END IF;
 
     IF (national_code_param, first_name_param, last_name_param, birth_date_param, gender_param,
@@ -26,28 +25,22 @@ BEGIN
            SELECT *
            FROM person
        ) THEN
-        SET result = CONCAT(result, 'Person with given information does not exist.\n');
+        SIGNAL SQLSTATE '02000'
+            SET MESSAGE_TEXT = 'Person with given information does not exist.', MYSQL_ERRNO = 9000;
     END IF;
 
-    IF NOT (
-                password_param RLIKE '.*[0-9].*' AND
-                password_param RLIKE '.*[a-z].*' AND
-                LENGTH(password_param) >= 8
+    IF NOT (password_param RLIKE '.*[0-9].*' AND
+            password_param RLIKE '.*[a-z].*' AND
+            LENGTH(password_param) >= 8
         ) THEN
-        SET result = CONCAT(result,
-                            'Entered password must be at least 8 characters and and\n '
-                                'have at least one character and digit.');
+        SIGNAL SQLSTATE '02000'
+            SET MESSAGE_TEXT = 'Entered password must be at least 8 characters and and\n '
+                '\thave at least one character and digit.', MYSQL_ERRNO = 9000;
     END IF;
 
-    IF STRCMP(result, '') <> 0 THEN
-        ROLLBACK;
-    ELSE
-        INSERT INTO system_information(user_name, password, creation_date)
-        VALUES (national_code_param, password_param, NOW());
-
-        SET result = 'Signed up successfully!';
-        COMMIT;
-    END IF;
+    INSERT INTO system_information(user_name, password, creation_date)
+    VALUES (national_code_param, password_param, NOW());
+    COMMIT;
 END $$
 
 DELIMITER ;
@@ -83,13 +76,29 @@ DELIMITER $$
 
 CREATE PROCEDURE change_password(
     user_name_param VARCHAR(20),
+    old_password_param VARCHAR(255),
     new_password_param VARCHAR(255)
 )
 BEGIN
-    IF NOT (
-                new_password_param RLIKE '.*[0-9].*' AND
-                new_password_param RLIKE '.*[a-z].*' AND
-                LENGTH(new_password_param) >= 8
+    IF user_name_param NOT IN (
+        SELECT user_name
+        FROM system_information
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT =
+                    'user does not exist!' , MYSQL_ERRNO = 9002;
+    END IF;
+    IF (user_name_param, old_password_param) NOT IN (
+        SELECT user_name, password
+        FROM system_information
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT =
+                    'your old password is incorrect!' , MYSQL_ERRNO = 9002;
+    END IF;
+    IF NOT (new_password_param RLIKE '.*[0-9].*' AND
+            new_password_param RLIKE '.*[a-z].*' AND
+            LENGTH(new_password_param) >= 8
         ) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT =
@@ -106,38 +115,13 @@ DELIMITER ;
 
 DELIMITER $$
 
-CREATE PROCEDURE give_point(
-    national_code_param CHAR(10),
-    vaccination_center_name_param VARCHAR(20),
-    brand_name_param VARCHAR(20),
-    point_param INT,
-    dose_number_param INT
-)
-BEGIN
-    IF (national_code_param, vaccination_center_name_param, brand_name_param, point_param, dose_number_param) IN (
-        SELECT *
-        FROM points
-    ) THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'you had given point for that dose and vaccination center.', MYSQL_ERRNO = 9002;
-    END IF;
-
-    INSERT INTO points(national_code, vaccination_center_name, brand_name, point, dose_number)
-    VALUES (national_code_param, vaccination_center_name_param, brand_name_param, point_param, dose_number_param);
-END $$
-
-DELIMITER ;
-
-DELIMITER $$
-
 CREATE PROCEDURE show_vaccination_centers_points(
     name_param VARCHAR(20)
 )
 BEGIN
-    SELECT vaccination_center_name, point
-    FROM points
-    WHERE vaccination_center_name = name_param
-    GROUP BY vaccination_center_name;
+    SELECT vaccination_center_name, SUM(point)
+    FROM injection
+    WHERE vaccination_center_name = name_param;
 END $$
 
 DELIMITER ;
