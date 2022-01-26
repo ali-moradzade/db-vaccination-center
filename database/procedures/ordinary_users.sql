@@ -137,11 +137,12 @@ DELIMITER ;
 DELIMITER $$
 
 CREATE PROCEDURE show_each_day_injections(
-    date DATE
+    date_param DATE
 )
 BEGIN
     SELECT date, COUNT(national_code)
     FROM injection
+    WHERE date = date_param
     GROUP BY date DESC;
 END $$
 
