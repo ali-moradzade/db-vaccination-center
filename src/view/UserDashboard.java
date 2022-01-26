@@ -7,7 +7,7 @@ public class UserDashboard
 	public static int showDashboard()
 	{
 		Scanner input = new Scanner(System.in);
-		System.out.println("Your dashboard (as a user):");
+		System.out.println("Your Dashboard (as a user):");
 		System.out.printf("1. %s\n2. %s\n3. %s\n4. %s\n5. %s\n> ",
 				"changePassword",
 				"showVaccinationCenterPoints",
@@ -24,8 +24,9 @@ public class UserDashboard
 		return option;
 	}
 
-	public static void main(String[] args)
-	{
-		System.out.println(showDashboard());
-	}
+	//	// used for testing
+	//	public static void main(String[] args)
+	//	{
+	//		System.out.println(showDashboard());
+	//	}
 }

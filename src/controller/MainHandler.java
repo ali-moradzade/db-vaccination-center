@@ -7,47 +7,55 @@ public class MainHandler
 {
 	public static void main(String[] args)
 	{
+		System.out.println("Welcome to Vaccination System!");
+
 		int option = Start.showMenu();
 		System.out.println();
 		boolean flag = true;
 
 		while (flag)
 		{
-			flag = false;
 			switch (option)
 			{
 				case 1:
-					boolean signedUp = UserHandler.signUp();
-					if (signedUp)
-					{
-						System.out.println(
-								"\nRedirecting to Main page for login ..\n");
-						flag = true;
-					}
+					UserHandler.signUp();
+					System.out.println(
+							"\nRedirecting to Main page for login ...");
+					flag = true;
 					break;
 				case 2:
 					boolean signedIn = UserHandler.signIn();
 					if (signedIn)
 					{
-						System.out.println("\nRedirecting to your dashboard ...\n");
-						int choose = UserDashboard.showDashboard();
-						UserHandler.dashboard(choose);
-					}
-					else {
-						flag = true;
+						System.out.println(
+								"\nRedirecting to your dashboard ...\n");
+						UserHandler.dashboard();
 					}
 					break;
 				case 3:
-					DoctorHandler.singIn();
+					boolean signedInAsDoctor = DoctorHandler.singIn();
+					if (signedInAsDoctor)
+					{
+						System.out.println(
+								"\nRedirecting to your dashboard ...\n");
+						DoctorHandler.dashboard();
+					}
 					break;
 				case 4:
 					NurseHandler.singIn();
 					break;
+				case 5:
+					System.out.println("Exiting from the System ...");
+					flag = false;
+					break;
 			}
 			if (flag)
+			{
+				clearScreen();
 				option = Start.showMenu();
+			}
 		}
-		
+
 		System.out.println("\nprogram finished successfully!");
 	}
 }

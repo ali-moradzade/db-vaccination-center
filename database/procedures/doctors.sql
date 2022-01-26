@@ -139,6 +139,14 @@ BEGIN
             SET MESSAGE_TEXT = 'user not found!', MYSQL_ERRNO = 9002;
     END IF;
 
+    if user_name_param in (
+        SELECT national_code
+        from doctor
+        ) then
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'you cannot delete a doctor!', MYSQL_ERRNO = 9002;
+    END IF;
+
     DELETE
     FROM system_information
     WHERE user_name = user_name_param;

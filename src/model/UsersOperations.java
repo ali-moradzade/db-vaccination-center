@@ -11,6 +11,7 @@ public class UsersOperations
 	private static final String userid = "root";
 	private static final String passwd = "";
 
+	// used for testing
 	//	public static void main(String[] args)
 	//	{
 	//		signUp("0009831057", "nima", "mohammadi",
@@ -80,7 +81,6 @@ public class UsersOperations
 		if (result == true)
 			System.out.println("signed in successfully!");
 		
-		System.out.println();
 		return result;
 	}
 
@@ -100,7 +100,6 @@ public class UsersOperations
 		if (result == true)
 			System.out.println("password changed successfully!");
 
-		System.out.println();
 		return result;
 	}
 
@@ -130,7 +129,6 @@ public class UsersOperations
 		{
 			System.out.println(sqle.getMessage());
 		}
-		System.out.println();
 	}
 
 	public static void showEachDayInjections(
@@ -159,7 +157,6 @@ public class UsersOperations
 		{
 			System.out.println(sqle.getMessage());
 		}
-		System.out.println();
 	}
 
 	public static void showEachBrandVaccinatedPeople(String name_param)
@@ -185,6 +182,5 @@ public class UsersOperations
 		{
 			System.out.println(sqle.getMessage());
 		}
-		System.out.println();
 	}
 }

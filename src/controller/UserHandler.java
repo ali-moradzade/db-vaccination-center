@@ -44,19 +44,22 @@ public class UserHandler
 
 	public static boolean signIn()
 	{
+		System.out.println("Signing In ...\n");
 		Scanner input = new Scanner(System.in);
 
-		System.out.print("Enter your username: ");
+		System.out.print("enter your username: ");
 		String username = input.nextLine();
 
-		System.out.print("Enter your password: ");
+		System.out.print("enter your password: ");
 		String password = input.nextLine();
 
 		return UsersOperations.signIn(username, password);
 	}
 
-	public static void dashboard(int option)
+	public static void dashboard()
 	{
+		int option = UserDashboard.showDashboard();
+
 		boolean flag = true;
 		while (flag)
 		{
@@ -80,12 +83,16 @@ public class UserHandler
 					break;
 				// exit
 				case 5:
-					System.out.println("exiting your dashboard ..");
+					System.out.println("\nexiting your dashboard ...");
 					flag = false;
 					break;
 			}
+
 			if (flag)
+			{
+				System.out.println();
 				option = UserDashboard.showDashboard();
+			}
 		}
 	}
 

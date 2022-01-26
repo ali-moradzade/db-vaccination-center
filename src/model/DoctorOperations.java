@@ -32,7 +32,7 @@ public class DoctorOperations
 		return true;
 	}
 
-	public static void signInAsDoctor(
+	public static boolean signInAsDoctor(
 			String user_name_param,
 			String password_param)
 	{
@@ -44,6 +44,8 @@ public class DoctorOperations
 		boolean result = executeUpdateQuery(query);
 		if (result == true)
 			System.out.println("signed in successfully!");
+
+		return result;
 	}
 
 	public static void createBrand(
@@ -92,6 +94,6 @@ public class DoctorOperations
 
 		boolean result = executeUpdateQuery(query);
 		if (result == true)
-			System.out.println("account created successfully!");
+			System.out.println("account deleted successfully!");
 	}
 }
