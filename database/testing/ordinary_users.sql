@@ -101,6 +101,6 @@ CALL show_vaccination_center_points('morad-vacc-center');
 # );
 
 SELECT *
-from injection;
+FROM injection;
 
 CALL show_each_day_injections('1400-10-10');

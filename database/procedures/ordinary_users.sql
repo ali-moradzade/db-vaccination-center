@@ -168,7 +168,7 @@ BEGIN
         SELECT serial_number
         FROM vial
                  NATURAL JOIN brand
-        WHERE brand.name = name_param
+        WHERE brand_name = name_param
     );
 END $$
 
