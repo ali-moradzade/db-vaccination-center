@@ -42,7 +42,13 @@ public class MainHandler
 					}
 					break;
 				case 4:
-					NurseHandler.singIn();
+					boolean signedInAsNurse = NurseHandler.singIn();
+					if (signedInAsNurse)
+					{
+						System.out.println(
+								"\nRedirecting to your dashboard ...\n");
+						NurseHandler.dashboard();
+					}
 					break;
 				case 5:
 					System.out.println("Exiting from the System ...");
@@ -51,7 +57,6 @@ public class MainHandler
 			}
 			if (flag)
 			{
-				clearScreen();
 				option = Start.showMenu();
 			}
 		}

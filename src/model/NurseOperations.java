@@ -10,11 +10,6 @@ public class NurseOperations
 	public static final String userid = "root";
 	public static final String passwd = "";
 
-	public static void main(String[] args)
-	{
-		//TODO: test nurse procedures
-	}
-
 	public static boolean executeUpdateQuery(String query)
 	{
 		try (Connection connection = DriverManager.getConnection(
@@ -32,7 +27,7 @@ public class NurseOperations
 		return true;
 	}
 
-	public static void signInAsNurse(
+	public static boolean signInAsNurse(
 			String user_name_param,
 			String password_param)
 	{
@@ -44,6 +39,7 @@ public class NurseOperations
 		boolean result = executeUpdateQuery(query);
 		if (result == true)
 			System.out.println("signed in successfully!");
+		return result;
 	}
 
 	public static void createVial(

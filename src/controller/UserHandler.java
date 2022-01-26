@@ -108,7 +108,8 @@ public class UserHandler
 		System.out.print("enter your new password: ");
 		String new_password_para = input.nextLine();
 
-		UsersOperations.changePassword(user_name_param, old_password_param,
+		UsersOperations.changePassword(user_name_param,
+				old_password_param,
 				new_password_para);
 	}
 
