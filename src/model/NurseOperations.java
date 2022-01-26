@@ -32,7 +32,7 @@ public class NurseOperations
 		return true;
 	}
 
-	public static void sign_in_as_nurse(
+	public static void signInAsNurse(
 			String user_name_param,
 			String password_param)
 	{
@@ -46,7 +46,7 @@ public class NurseOperations
 			System.out.println("signed in successfully!");
 	}
 
-	public static void create_vial(
+	public static void createVial(
 			String creator_nurse_national_code_param,
 			String serial_number_param,
 			String vaccination_center_name_param,

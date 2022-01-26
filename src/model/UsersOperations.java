@@ -8,22 +8,22 @@ import java.sql.Statement;
 public class UsersOperations
 {
 	private static final String dbName = "db-vaccination-centre";
-	public static final String userid = "root";
-	public static final String passwd = "";
+	private static final String userid = "root";
+	private static final String passwd = "";
 
-	public static void main(String[] args)
-	{
-		//		signUp("0009831057", "nima", "mohammadi",
-		//				"2000-01-01", "M", "N",
-		//				"1234567a");
-		//		sign_in("0009831058", "1234567a");
-		//		change_password("0009831058", "1234567a", "1234567b");
-		//		show_vaccination_center_points("morad-vacc-center");
-		//		show_each_day_injections("1400-10-10");
-		show_each_brand_vaccinated_people("ali-moradzade-brand");
-	}
+	//	public static void main(String[] args)
+	//	{
+	//		signUp("0009831057", "nima", "mohammadi",
+	//				"2000-01-01", "M", "N",
+	//				"1234567a");
+	//		sign_in("0009831058", "1234567a");
+	//		change_password("0009831058", "1234567a", "1234567b");
+	//		show_vaccination_center_points("morad-vacc-center");
+	//		show_each_day_injections("1400-10-10");
+	//		show_each_brand_vaccinated_people("ali-moradzade-brand");
+	//	}
 
-	public static boolean executeUpdateQuery(String query)
+	private static boolean executeUpdateQuery(String query)
 	{
 		try (Connection connection = DriverManager.getConnection(
 				"jdbc:mysql://localhost:3306/" + dbName, userid,
@@ -40,7 +40,7 @@ public class UsersOperations
 		return true;
 	}
 
-	public static void signUp(
+	public static boolean signUp(
 			String national_code_param,
 			String first_name_param,
 			String last_name_param,
@@ -63,9 +63,10 @@ public class UsersOperations
 		boolean result = executeUpdateQuery(query);
 		if (result == true)
 			System.out.println("signed up successfully!");
+		return result;
 	}
 
-	public static void sign_in(
+	public static boolean signIn(
 			String user_name_param,
 			String password_param)
 	{
@@ -78,9 +79,12 @@ public class UsersOperations
 		boolean result = executeUpdateQuery(query);
 		if (result == true)
 			System.out.println("signed in successfully!");
+		
+		System.out.println();
+		return result;
 	}
 
-	public static void change_password(
+	public static boolean changePassword(
 			String user_name_param,
 			String old_password_param,
 			String new_password_param)
@@ -95,9 +99,12 @@ public class UsersOperations
 		boolean result = executeUpdateQuery(query);
 		if (result == true)
 			System.out.println("password changed successfully!");
+
+		System.out.println();
+		return result;
 	}
 
-	public static void show_vaccination_center_points(
+	public static void showVaccinationCenterPoints(
 			String name_param)
 	{
 		String param = String.format(
@@ -123,9 +130,10 @@ public class UsersOperations
 		{
 			System.out.println(sqle.getMessage());
 		}
+		System.out.println();
 	}
 
-	public static void show_each_day_injections(
+	public static void showEachDayInjections(
 			String date)
 	{
 		String param = String.format(
@@ -151,9 +159,10 @@ public class UsersOperations
 		{
 			System.out.println(sqle.getMessage());
 		}
+		System.out.println();
 	}
 
-	public static void show_each_brand_vaccinated_people(String name_param)
+	public static void showEachBrandVaccinatedPeople(String name_param)
 	{
 		String param = String.format(
 				"('%s')",
@@ -176,5 +185,6 @@ public class UsersOperations
 		{
 			System.out.println(sqle.getMessage());
 		}
+		System.out.println();
 	}
 }

@@ -10,10 +10,10 @@ public class DoctorOperations
 	public static final String userid = "root";
 	public static final String passwd = "";
 
-	public static void main(String[] args)
-	{
-		//TODO: test doctor procedures
-	}
+	//	public static void main(String[] args)
+	//	{
+	//TODO: test doctor procedures
+	//	}
 
 	public static boolean executeUpdateQuery(String query)
 	{
@@ -32,7 +32,7 @@ public class DoctorOperations
 		return true;
 	}
 
-	public static void sign_in_as_doctor(
+	public static void signInAsDoctor(
 			String user_name_param,
 			String password_param)
 	{
@@ -46,7 +46,7 @@ public class DoctorOperations
 			System.out.println("signed in successfully!");
 	}
 
-	public static void create_brand(
+	public static void createBrand(
 			String name_param,
 			String creator_doctor_national_code_param,
 			String doses_param,
@@ -64,7 +64,7 @@ public class DoctorOperations
 			System.out.println("brand created successfully!");
 	}
 
-	public static void create_vaccination_center(
+	public static void createVaccinationCenter(
 			String name_param,
 			String creator_doctor_param,
 			String address_param)
@@ -80,7 +80,7 @@ public class DoctorOperations
 			System.out.println("vaccination center created successfully!");
 	}
 
-	public static void delete_account(
+	public static void deleteAccount(
 			String doctor_national_code_param,
 			String user_name_param)
 	{
