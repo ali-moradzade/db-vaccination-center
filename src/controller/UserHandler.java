@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import model.UsersOperations;
 import view.UserDashboard;
+import view.UserDashboard.UserOptions;
 
 public class UserHandler
 {
@@ -58,31 +59,26 @@ public class UserHandler
 
 	public static void dashboard()
 	{
-		int option = UserDashboard.showDashboard();
+		UserOptions option = UserDashboard.showDashboard();
 
 		boolean flag = true;
 		while (flag)
 		{
 			switch (option)
 			{
-				// changePassword
-				case 1:
+				case changePassword:
 					changePassword();
 					break;
-				// showVaccinationCenterPoints
-				case 2:
+				case showVaccinationCenterPoints:
 					showVaccinationCenterPoints();
 					break;
-				// showEachDayInjections
-				case 3:
+				case showEachDayInjections:
 					showEachDayInjections();
 					break;
-				// showEachBrandVaccinatedPeople
-				case 4:
+				case showEachBrandVaccinatedPeople:
 					showEachBrandVaccinatedPeople();
 					break;
-				// exit
-				case 5:
+				case exit:
 					System.out.println("\nexiting your dashboard ...");
 					flag = false;
 					break;

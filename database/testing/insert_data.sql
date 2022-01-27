@@ -33,6 +33,9 @@ VALUES ('0009831059', 'abolfazl', 'moradi-fejooni', '2000-1-1', 'M', 'N');
 INSERT INTO person(national_code, first_name, last_name, birth_date, gender, special_disease)
 VALUES ('0009831113', 'amir', 'khosravi-nezhad', '2000-1-1', 'M', 'N');
 
+INSERT INTO person(national_code, first_name, last_name, birth_date, gender, special_disease)
+VALUES ('000983111a', 'amir', 'khosravi-nezhad', '2000-1-1', 'M', 'N');
+
 # =====================
 # inserting our doctors
 

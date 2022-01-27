@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import model.DoctorOperations;
 import view.DoctorDashboard;
+import view.DoctorDashboard.DoctorOptions;
 
 public class DoctorHandler
 {
@@ -23,27 +24,23 @@ public class DoctorHandler
 
 	public static void dashboard()
 	{
-		int option = DoctorDashboard.showDashboard();
+		DoctorOptions option = DoctorDashboard.showDashboard();
 
 		boolean flag = true;
 		while (flag)
 		{
 			switch (option)
 			{
-				// createBrand
-				case 1:
+				case createBrand:
 					createBrand();
 					break;
-				// createVaccinationCenter
-				case 2:
+				case createVaccinationCenter:
 					createVaccinationCenter();
 					break;
-				// deleteAccount
-				case 3:
+				case deleteAccount:
 					deleteAccount();
 					break;
-				// exit
-				case 4:
+				case exit:
 					System.out.println("exiting your dashboard ...");
 					flag = false;
 					break;

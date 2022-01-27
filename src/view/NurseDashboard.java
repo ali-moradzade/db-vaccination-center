@@ -4,7 +4,17 @@ import java.util.Scanner;
 
 public class NurseDashboard
 {
-	public static int showDashboard()
+	public enum NurseOptions
+	{
+		createVial,
+		injects,
+		exit
+	};
+
+	private static final int NUMBER_OF_NURSE_OPERATIONS = NurseOptions
+			.values().length;
+
+	public static NurseOptions showDashboard()
 	{
 		Scanner input = new Scanner(System.in);
 
@@ -20,12 +30,12 @@ public class NurseDashboard
 			System.out.print("> ");
 			option = input.nextInt();
 		}
-		return option;
+		return NurseOptions.values()[option - 1];
 	}
 
-//		// used for testing
-//		public static void main(String[] args)
-//		{
-//			System.out.println(showDashboard());
-//		}
+	// used for testing
+	public static void main(String[] args)
+	{
+		System.out.println(showDashboard());
+	}
 }

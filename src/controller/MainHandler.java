@@ -1,7 +1,7 @@
 package controller;
 
 import view.Start;
-import view.UserDashboard;
+import view.Start.StartOptions;
 
 public class MainHandler
 {
@@ -9,7 +9,7 @@ public class MainHandler
 	{
 		System.out.println("Welcome to Vaccination System!");
 
-		int option = Start.showMenu();
+		StartOptions option = Start.showMenu();
 		System.out.println();
 		boolean flag = true;
 
@@ -17,13 +17,13 @@ public class MainHandler
 		{
 			switch (option)
 			{
-				case 1:
+				case singUp:
 					UserHandler.signUp();
 					System.out.println(
 							"\nRedirecting to Main page for login ...");
 					flag = true;
 					break;
-				case 2:
+				case singIn:
 					boolean signedIn = UserHandler.signIn();
 					if (signedIn)
 					{
@@ -32,7 +32,7 @@ public class MainHandler
 						UserHandler.dashboard();
 					}
 					break;
-				case 3:
+				case signInAsDoctor:
 					boolean signedInAsDoctor = DoctorHandler.singIn();
 					if (signedInAsDoctor)
 					{
@@ -41,7 +41,7 @@ public class MainHandler
 						DoctorHandler.dashboard();
 					}
 					break;
-				case 4:
+				case signInAsNurse:
 					boolean signedInAsNurse = NurseHandler.singIn();
 					if (signedInAsNurse)
 					{
@@ -50,15 +50,13 @@ public class MainHandler
 						NurseHandler.dashboard();
 					}
 					break;
-				case 5:
+				case exit:
 					System.out.println("Exiting from the System ...");
 					flag = false;
 					break;
 			}
 			if (flag)
-			{
 				option = Start.showMenu();
-			}
 		}
 
 		System.out.println("\nprogram finished successfully!");

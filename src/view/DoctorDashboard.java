@@ -4,7 +4,18 @@ import java.util.Scanner;
 
 public class DoctorDashboard
 {
-	public static int showDashboard()
+	public enum DoctorOptions
+	{
+		createBrand,
+		createVaccinationCenter,
+		deleteAccount,
+		exit
+	};
+
+	private static final int DOCTOR_NUMBER_OF_OPTIONS = DoctorOptions
+			.values().length;
+
+	public static DoctorOptions showDashboard()
 	{
 		Scanner input = new Scanner(System.in);
 		System.out.println("Your Dashboard (as a doctor):");
@@ -14,18 +25,18 @@ public class DoctorDashboard
 				"Delete Account",
 				"Exit");
 		int option = input.nextInt();
-		while (option < 1 || option > 4)
+		while (option < 1 || option > DOCTOR_NUMBER_OF_OPTIONS)
 		{
 			System.out.println("\nInvalid option. try again.");
 			System.out.print("> ");
 			option = input.nextInt();
 		}
-		return option;
+		return DoctorOptions.values()[option - 1];
 	}
 
-	//		// used for testing
-	//		public static void main(String[] args)
-	//		{
-	//			System.out.println(showDashboard());
-	//		}
+	// used for testing
+	public static void main(String[] args)
+	{
+		System.out.println(showDashboard());
+	}
 }

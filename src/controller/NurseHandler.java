@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import model.NurseOperations;
 import view.NurseDashboard;
+import view.NurseDashboard.NurseOptions;
 
 public class NurseHandler
 {
@@ -23,26 +24,28 @@ public class NurseHandler
 
 	public static void dashboard()
 	{
-		int option = NurseDashboard.showDashboard();
+		NurseOptions option = NurseDashboard.showDashboard();
 
 		boolean flag = true;
 		while (flag)
 		{
 			switch (option)
 			{
-				// createVial
-				case 1:
+				case createVial:
 					createVial();
 					break;
-				// injects
-				case 2:
+				case injects:
 					injects();
 					break;
-				// exit
-				case 3:
+				case exit:
 					System.out.println("\nexiting your dashboard ...");
 					flag = false;
 					break;
+			}
+			if (flag)
+			{
+				System.out.println();
+				option = NurseDashboard.showDashboard();
 			}
 		}
 	}
