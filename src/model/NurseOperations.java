@@ -6,9 +6,9 @@ import java.sql.Statement;
 
 public class NurseOperations
 {
-	private static final String dbName = "db-vaccination-centre";
-	public static final String userid = "root";
-	public static final String passwd = "";
+	private static final String dbName = InitializeConfiguration.dbName;
+	private static final String userid = InitializeConfiguration.userid;
+	private static final String passwd = InitializeConfiguration.passwd;
 
 	public static boolean executeUpdateQuery(String query)
 	{

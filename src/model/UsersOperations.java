@@ -7,9 +7,9 @@ import java.sql.Statement;
 
 public class UsersOperations
 {
-	private static final String dbName = "db-vaccination-centre";
-	private static final String userid = "root";
-	private static final String passwd = "";
+	private static final String dbName = InitializeConfiguration.dbName;
+	private static final String userid = InitializeConfiguration.userid;
+	private static final String passwd = InitializeConfiguration.passwd;
 
 	// used for testing
 	//	public static void main(String[] args)

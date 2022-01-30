@@ -150,6 +150,6 @@ BEGIN
     DELETE
     FROM system_information
     WHERE user_name = user_name_param;
-END;
+END $$
 
 DELIMITER ;
