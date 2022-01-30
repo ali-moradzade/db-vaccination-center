@@ -9,7 +9,7 @@ You can read project description from [Here](db-final-fall-1400.pdf)
 # Features
 
 ## General Operations:
-- Siging up in the system
+- Signing up in the system
 - Signing in as a user
 - Signing in as a doctor
 - Signing in as a nurse
