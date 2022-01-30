@@ -1,27 +1,28 @@
 # Vaccination Center
-This is my final project of the Database Design course at AUT.\
-Vaccination Center is a basic version of vaccination center that supports many things.  
-All error handling, logic and type checkings are done by MySQL, and the java program just, creates a view and some handlers to connect the program to its database.  
+This is my final project of the ***Database Design*** course at AUT. (Fall 1400)  
 
-you can read project description from [Here](db-final-fall-1400.pdf)
+*Vaccination Center* is the basic version of vaccination center in reality that supports many things.  
+All error handling, logic and type checkings are done by MySQL, and the java program just creates a view and some handlers to connect the program to its database.  
+
+You can read project description from [Here](db-final-fall-1400.pdf)
 
 # Features
 
 ## General Operations:
 - Siging up in the system
-- Login as a user
-- Login as a doctor
-- Login as a nurse
+- Signing in as a user
+- Signing in as a doctor
+- Signing in as a nurse
 
 ## User Operations:
 - Change password
-- Show vaccinations center points
+- Show vaccination center points
 - Show each day injections
 - Show each brand vaccinated people
 
 ## Doctor Operations:
 - Create brand
-- Create vaccisnation center
+- Create vaccination center
 - Delete ordinary user or nurse account
 
 ## Nurse Operations:
@@ -29,8 +30,8 @@ you can read project description from [Here](db-final-fall-1400.pdf)
 - Inject vial
   
 
-# How To Use
-You first need to create a new user in MySQL as follows: (note: if your password policy is set to strong you should change password here and in in model.InitializeConfiguration class)
+# Usage
+You first need to create a new user in MySQL as follows: (note: if your password policy is set to strong you should change password here and in the `model.InitializeConfiguration` class)
 ```sql 
 mysql> CREATE USER 'ali'@'localhost' IDENTIFIED BY '1234';
 ```
@@ -46,13 +47,13 @@ mysql> GRANT ALL PRIVILEGES ON db_vaccination_center.* TO ali@localhost;
 mysql> FLUSH PRIVILEGES;
 ```
 
-You can always change the configurations as you wish:
+You can always change the configurations as you wish (in the `model.InitializeConfiguration` class):
 
 ``` java 
 {
-    public static final String dbName = "db_vaccination_center";
-	public static final String userid = "ali";
-	public static final String passwd = "1234";
+  public static final String dbName = "db_vaccination_center";
+  public static final String userid = "ali";
+  public static final String passwd = "1234";
 }
 ```
 
@@ -65,10 +66,12 @@ $ cd db-vaccination-center
 $
 $ # use the command below to run all the scripts needed to create tables, procedures and inserting data
 $ # (note: this command will ask your database password for user ali, remember that our password is 1234)
+$ # please note that this command has not output.
 $ cat database/create_tables.sql database/procedures/*.sql database/testing/insert_data.sql | mysql -u ali -p db_vaccination_center
+
 ```
 
-at this momdent all of our tables are created and initialized with the data in `database/testing/insert_data.sql` file.
+At this momdent all of our tables and procedures are created, and database has been initialized with the data in `database/testing/insert_data.sql` file.
 
 # Requirements for running program
   - mysql-connector-java
