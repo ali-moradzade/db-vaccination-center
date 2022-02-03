@@ -1,0 +1,39 @@
+String param = String.format(
+	"()",
+	national_code_param,
+	first_name_param,
+	last_name_param,
+	birth_date_param,
+	gender_param,
+	special_disease_param,
+	password_param,
+);
+String query = "call sign_up" + param;
+String param = String.format(
+	"()",
+	user_name_param,
+	password_param,
+);
+String query = "call sign_in" + param;
+String param = String.format(
+	"()",
+	user_name_param,
+	old_password_param,
+	new_password_param,
+);
+String query = "call change_password" + param;
+String param = String.format(
+	"()",
+	name_param,
+);
+String query = "call show_vaccination_center_points" + param;
+String param = String.format(
+	"()",
+	date,
+);
+String query = "call show_each_day_injections" + param;
+String param = String.format(
+	"()",
+	name_param,
+);
+String query = "call show_each_brand_vaccinated_people" + param;

@@ -1,0 +1,67 @@
+#!/usr/bin/perl
+#=======================
+# Author : Ali Moradzade
+# Created: 2022/02/03
+#=======================
+# use warnings;
+use v5.10;
+use utf8;
+use autodie;
+
+#convert to java
+
+# Link: https://stackoverflow.com/questions/953707/in-perl-how-can-i-read-an-entire-file-into-a-string
+# my $file = "nurse.sql";
+# my $document = do {
+#     local $/ = undef;
+#     open my $fh, "<", $file
+#         or die "could not open $file: $!";
+#     <$fh>;
+# };
+# 
+# if ($document =~ /
+# 	create\s+procedure\s+
+# 	(?<procedure_name>\w+)
+# 	\(
+# 		(?<arguments>.*?)
+# 	^\)
+# /msix) {
+# 	say "procedure name:";
+# 	say "$+{procedure_name}";
+# 	say "";
+# 
+# 	say "arguments:";
+# 	say "$+{arguments}";
+# }
+
+open NURSE, '<', 'doctors.sql';
+
+my $procedure_name = "";
+my $arguments = "";
+
+while (<NURSE>) {
+	chomp;
+	if (/CREATE PROCEDURE (\w+)\(/) {
+		say "public static void $1(";
+		$procedure_name =$1;
+	}
+
+	if (/
+		\s+
+		(\w+)
+		\s+
+		[A-Z]+(?:\(\d+\))?
+		(,?)
+	/x) {
+		say "\tString $1$2";
+		$arguments .= "'$1'$2";
+	}
+
+	if (/^\s*\)/) {
+		say ")";
+		printf "{\n\t%s\n}\n",
+			"call procedure $procedure_name($arguments);";
+		$procedure_name = "";
+		$arguments = "";
+	}
+}

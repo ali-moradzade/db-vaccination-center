@@ -1,0 +1,6 @@
+String param = "(" + national_code_param + ", " + first_name_param + ", " + last_name_param + ", " + birth_date_param + ", " + gender_param + ", " + special_disease_param + ", " + password_param + ", " + )";
+String param = "(" + user_name_param + ", " + password_param + ", " + )";
+String param = "(" + user_name_param + ", " + old_password_param + ", " + new_password_param + ", " + )";
+String param = "(" + name_param + ", " + )";
+String param = "(" + date + ", " + )";
+String param = "(" + name_param + ", " + )";

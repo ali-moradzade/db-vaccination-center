@@ -1,0 +1,4 @@
+0009831004,ali,asad,2000-01-01,M,N
+0009831011,amirmohammad,babaei,2000-01-01,M,N
+0009831042,hadi,abbasi,2000-01-01,M,N
+0009831058,ali,moradzade,2000-01-01,M,N

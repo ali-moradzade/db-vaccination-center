@@ -1,0 +1,38 @@
+public static void sign_up(
+    String national_code_param,
+    String first_name_param,
+    String last_name_param,
+    String birth_date_param,
+    String gender_param,
+    String special_disease_param,
+    String password_param,
+)
+	String query = "call sign_up(" + national_code_param + ", " + first_name_param + ", " + last_name_param + ", " + birth_date_param + ", " + gender_param + ", " + special_disease_param + ", " + password_param + ");"
+	
+public static void sign_in(
+    String user_name_param,
+    String password_param,
+)
+	String query = "call sign_in(" + user_name_param + ", " + password_param + ");"
+	
+public static void change_password(
+    String user_name_param,
+    String old_password_param,
+    String new_password_param,
+)
+	String query = "call change_password(" + user_name_param + ", " + old_password_param + ", " + new_password_param + ") " 
+	
+public static void show_vaccination_center_points(
+    String name_param,
+)
+    String name_param,
+	
+public static void show_each_day_injections(
+    String date,
+)
+    String date,
+	
+public static void show_each_brand_vaccinated_people(
+    String name_param,
+)
+    String name_param,
