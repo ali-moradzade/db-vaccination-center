@@ -1,0 +1,16 @@
+#!/usr/bin/perl
+#=======================
+# Author : Ali Moradzade
+# Created: 2022/02/03
+#=======================
+use warnings;
+use v5.10;
+use utf8;
+use autodie;
+
+#test
+
+$_ = "signup_as_a_nurse";
+say;
+s/_(\w)/\U$1/g;
+say;

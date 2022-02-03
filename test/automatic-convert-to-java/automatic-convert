@@ -1,0 +1,63 @@
+#!/usr/bin/perl
+#=======================
+# Author : Ali Moradzade
+# Created: 2022/02/03
+#=======================
+use warnings;
+use v5.10;
+use utf8;
+use autodie;
+
+#automatic convert
+
+# Link: https://stackoverflow.com/questions/953707/in-perl-how-can-i-read-an-entire-file-into-a-string
+my $file = "nurse.sql";
+my $document = do {
+    local $/ = undef;
+    open my $fh, "<", $file
+        or die "could not open $file: $!";
+    <$fh>;
+};
+
+my %name_argument = ($document =~ /
+	create\s+procedure\s+
+	(?<procedure_name>\w+)
+	\(\n
+		(?<arguments>.*?)
+	^\)$
+/gmsix);
+
+foreach $value (values %name_argument) {
+	$value =~ s/^\s+//gm;
+	$value =~ s/\s+$//m;
+	$value =~ s/\n//g;
+}
+# while (($k, $v) = each %name_argument) {
+# 	say "$k:";
+# 	say "\t$v";
+# }
+# say "";
+
+foreach $value (values %name_argument) {
+	$value =~ s/
+		[A-Z]+
+		(?:\(\d*\))?
+		,?
+	//gx;
+# 	$value =~ s/\s+/\n/g;
+}
+# while (($k, $v) = each %name_argument) {
+# 	say "$k:";
+# 	say "$v";
+# }
+# say "";
+
+while (($k, $v) = each %name_argument) {
+	$k =~ s/_(\w)/\U$1/g;
+
+	$v =~ s/_param//g;
+	$v =~ s/_(\w)/\U$1/g;
+
+	say "$k";
+	say "$v\n";
+}
