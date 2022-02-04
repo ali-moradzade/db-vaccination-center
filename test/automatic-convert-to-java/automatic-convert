@@ -31,37 +31,40 @@ sub convert_to_java_method {
 }
 
 # Link: https://stackoverflow.com/questions/953707/in-perl-how-can-i-read-an-entire-file-into-a-string
-my $file = "nurse.sql";
-my $document = do {
-    local $/ = undef;
-    open my $fh, "<", $file
-        or die "could not open $file: $!";
-    <$fh>;
-};
 
-my %name_argument = ($document =~ /
-	create\s+procedure\s+
-	(?<procedure_name>\w+)
-	\(\n
-		(?<arguments>.*?)
-	^\)$
-/gmsix);
+foreach (@ARGV) {
+	my $file = $_;
+	my $document = do {
+		local $/ = undef;
+		open my $fh, "<", $file
+			or die "could not open $file: $!";
+		<$fh>;
+	};
 
-foreach $value (values %name_argument) {
-	$value =~ s/^\s+//gm;
-	$value =~ s/\s+$//m;
-	$value =~ s/\n//g;
-}
-foreach $value (values %name_argument) {
-	$value =~ s/
-		[A-Z]+
-		(?:\(\d*\))?
-		,?
-	//gx;
-}
-while (($k, $v) = each %name_argument) {
-	$v =~ s/_param//g;
-	$v =~ s/_(\w)/\U$1/g;
+	my %name_argument = ($document =~ /
+		create\s+procedure\s+
+		(?<procedure_name>\w+)
+		\(\n
+			(?<arguments>.*?)
+		^\)$
+	/gmsix);
 
-	&convert_to_java_method($k, (split ' ', $v));
+	foreach $value (values %name_argument) {
+		$value =~ s/^\s+//gm;
+		$value =~ s/\s+$//m;
+		$value =~ s/\n//g;
+	}
+	foreach $value (values %name_argument) {
+		$value =~ s/
+			[A-Z]+
+			(?:\(\d*\))?
+			,?
+		//gx;
+	}
+	while (($k, $v) = each %name_argument) {
+		$v =~ s/_param//g;
+		$v =~ s/_(\w)/\U$1/g;
+
+		&convert_to_java_method($k, (split ' ', $v));
+	}
 }
