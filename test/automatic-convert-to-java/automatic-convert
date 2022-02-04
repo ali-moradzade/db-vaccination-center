@@ -10,6 +10,26 @@ use autodie;
 
 #automatic convert
 
+sub convert_to_java_method {
+	my $procedure_name = shift(@_);
+	(my $method_name = $procedure_name) =~ s/_(\w)/\U$1/g;
+	my @arguments = @_;
+
+	my @method_arguments = @arguments;
+	$_ = "String " . $_ foreach (@method_arguments);
+
+	my @format;
+	push @format, "'%s'" foreach (1..@arguments);
+
+	print "public static void $method_name(", (join ',', @method_arguments), ")\n";
+	printf "{
+		String parameters = String.format(
+				\"(%s)\",
+				%s);
+		String query = \"call $procedure_name(parameters)\";
+}\n\n", (join ',', @format),(join ',', @arguments);
+}
+
 # Link: https://stackoverflow.com/questions/953707/in-perl-how-can-i-read-an-entire-file-into-a-string
 my $file = "nurse.sql";
 my $document = do {
@@ -32,32 +52,16 @@ foreach $value (values %name_argument) {
 	$value =~ s/\s+$//m;
 	$value =~ s/\n//g;
 }
-# while (($k, $v) = each %name_argument) {
-# 	say "$k:";
-# 	say "\t$v";
-# }
-# say "";
-
 foreach $value (values %name_argument) {
 	$value =~ s/
 		[A-Z]+
 		(?:\(\d*\))?
 		,?
 	//gx;
-# 	$value =~ s/\s+/\n/g;
 }
-# while (($k, $v) = each %name_argument) {
-# 	say "$k:";
-# 	say "$v";
-# }
-# say "";
-
 while (($k, $v) = each %name_argument) {
-	$k =~ s/_(\w)/\U$1/g;
-
 	$v =~ s/_param//g;
 	$v =~ s/_(\w)/\U$1/g;
 
-	say "$k";
-	say "$v\n";
+	&convert_to_java_method($k, (split ' ', $v));
 }
